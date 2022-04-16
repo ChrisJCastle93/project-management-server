@@ -7,7 +7,16 @@ router.get("/", (req, res, next) => {
   });
 });
 
-router.post("/", (req, res, next) => {
+router.get("/:id", (req, res, next) => {
+  const { id } = req.params;
+  Project.findById(id)
+    .populate("tasks")
+    .then((project) => {
+      res.json(project);
+    });
+});
+
+router.post("/new", (req, res, next) => {
   const { title, description } = req.body;
   Project.create({ title, description })
     .then((newProject) => {
@@ -16,7 +25,7 @@ router.post("/", (req, res, next) => {
     .catch((err) => console.log(err));
 });
 
-router.put("/:projectid", (req, res, next) => {
+router.put("/:projectid/update", (req, res, next) => {
   const { projectid } = req.params;
   const { title, description } = req.body;
   Project.findByIdAndUpdate(projectid, { title, description }).then(() => res.json({ message: `${projectid} updated successfully` }));
