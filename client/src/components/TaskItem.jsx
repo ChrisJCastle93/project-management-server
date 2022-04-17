@@ -1,5 +1,5 @@
 import React from 'react';
-import { VStack, HStack, Button, Text, Heading } from '@chakra-ui/react';
+import { Flex, Divider, Button, Text, Heading, Box } from '@chakra-ui/react';
 import { apiService } from '../api/service';
 
 export default function TaskItem(props) {
@@ -8,7 +8,7 @@ export default function TaskItem(props) {
 
   const handleDelete = () => {
     const { _id, project } = task;
-    console.log(_id, project)
+    console.log(_id, project);
     apiService
       .deleteTask(project, _id)
       .then(response => {
@@ -19,19 +19,20 @@ export default function TaskItem(props) {
   };
 
   return (
-    <div className="">
-      <br />
-      <VStack>
-        <Heading>{task.title}</Heading>
-        <Text>{task.description}</Text>
-        <HStack>
-          {/* <Button>
-            <Link to={`projects/${task.id}/edit`}>EDIT FORM</Link>
-          </Button> */}
-          <Button onClick={handleDelete}>DELETE</Button>
-        </HStack>
-      </VStack>
-      <br />
-    </div>
+    <Box
+      mt={4}
+      border="4px"
+      borderRadius="10"
+      bg="gray.50"
+      borderColor="gray.300"
+      className=""
+    >
+      <Flex p={4} direction="row" alignItems="center" justifyContent="space-between">
+        <Heading size="lg">{task.title}</Heading>
+        <Button colorScheme="red" onClick={handleDelete}>DELETE</Button>
+      </Flex>
+      <Divider />
+      <Text p={4}>{task.description}</Text>
+    </Box>
   );
 }
