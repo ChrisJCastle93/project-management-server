@@ -2,20 +2,23 @@ import axios from 'axios';
 
 class Service {
   constructor() {
-    this.baseUrl = 'http://localhost:5005/api';
+    this.service = axios.create({
+      baseURL: 'http://localhost:5005/api',
+      withCredentials: true,
+    });
   }
 
-  getAllProjects = () => {
-    return axios.get(`${this.baseUrl}/projects`);
+  getAllProjects = credentials => {
+    return this.service.get('/projects', credentials);
   };
 
   getOneProject = id => {
-    return axios.get(`${this.baseUrl}/projects/${id}`);
+    return this.service.get(`/projects/${id}`);
   };
 
   createProject = (title, description) => {
-    axios
-      .post(`${this.baseUrl}/projects/new`, {
+    return this.service
+      .post(`/projects/new`, {
         title,
         description,
       })
@@ -24,30 +27,46 @@ class Service {
   };
 
   updateProject = (id, title, description) => {
-    return axios.put(`${this.baseUrl}/projects/${id}`, {
+    return this.service.put(`/projects/${id}`, {
       title,
       description,
     });
   };
 
   deleteProject = id => {
-    return axios.delete(`${this.baseUrl}/projects/${id}`);
+    return this.service.delete(`/projects/${id}`);
   };
 
   createNewTask = (projectId, title, description) => {
-    return axios
-      .post(`${this.baseUrl}/tasks/new`, {
-        title,
-        description,
-        projectId,
-      })
+    return this.service.post(`/tasks/new`, {
+      title,
+      description,
+      projectId,
+    });
   };
 
   deleteTask = (project, _id) => {
-    return axios.delete(`${this.baseUrl}/tasks/${_id}`, { data: { project: project } })
+    return this.service.delete(`/tasks/${_id}`, {
+      data: { project: project },
+    });
   };
+
+  signup(credentials) {
+    return this.service.post(`/auth/signup`, credentials);
+  }
+
+  login(email, password) {
+    return this.service.post(`/auth/login`, { email, password });
+  }
+
+  isLoggedIn() {
+    return this.service.get('/auth/loggedin')
+  }
 }
 
 const apiService = new Service();
+// const authService = new Service2();
 
 export { apiService };
+
+// export { apiService, authService };
